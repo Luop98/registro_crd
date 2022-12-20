@@ -1,3 +1,4 @@
+import 'package:registro_crd/model/dish.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:async';
@@ -25,5 +26,20 @@ class DBHelper{
       }else{
         return _db; 
       }
+  }
+
+  //creacion de datos
+
+  Future<int> createDish (Dish dish) async{
+    var dbReady = await db;
+    return await dbReady!.rawInsert("INSERT INTO Dishes(name, description, price)VALUES ('${dish.name} ', '${dish.description} ','${dish.price} ')");
+  }
+
+  //actualizacion de datos
+
+  Future <int> updateDish (Dish dish)async{
+    var dbReady = await db;
+    return await dbReady!.rawInsert("UPDATE Dish SET description = '${dish.description}',price = ' ${dish.price}' WHERE name = ' ${dish.name}' ");
+    
   }
 }
