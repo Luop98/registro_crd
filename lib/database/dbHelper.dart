@@ -42,4 +42,22 @@ class DBHelper{
     return await dbReady!.rawInsert("UPDATE Dish SET description = '${dish.description}',price = ' ${dish.price}' WHERE name = ' ${dish.name}' ");
     
   }
+
+  //elimiar datos
+ Future <int> deleteDish (String name)async{
+
+   var dbReady = await db;
+  return await dbReady!.rawInsert("DELETE FROM Dishes WHERE name = '$name '");
+ }
+
+ //lectura de datos
+
+ Future <Dish> readDish (String name)async{
+  var dbReady = await db;
+  var read = await dbReady!.rawQuery("SELECT * FROM Dishes WHERE name = '${name} '");
+
+  return Dish.fromMap(read[0]);
+
+ }
+
 }
