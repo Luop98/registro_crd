@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:registro_crd/model/dish.dart';
+import 'package:registro_crd/database/dbHelper.dart';
+import 'dart:async';
+
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -18,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   String? name, description;
   double? price;
 
+
   getName(name) {
     this.name = name;
     print(this.name);
@@ -34,19 +39,29 @@ class _MyAppState extends State<MyApp> {
   }
 
   createData() {
-    print("create");
+      var dbHelper = DBHelper();
+      var dish = Dish(name, description, price);
+      dbHelper.createDish(dish);
+  
   }
 
   readData() {
-    print("read");
+   var dbHelper = DBHelper();
+   Future <Dish> dish = dbHelper.readDish(name!);
+   dish.then((dishData){
+    print("${dishData.name}, ${dishData.description},${dishData.price}, ");
+   });
   }
 
   updateData() {
-    print("update");
+    var dbHelper = DBHelper();
+      var dish = Dish(name, description, price);
+      dbHelper.updateDish(dish);
   }
 
   deleteData() {
-    print("delete");
+   var dbHelper = DBHelper();
+   dbHelper.deleteDish(name!);
   }
 
   @override
