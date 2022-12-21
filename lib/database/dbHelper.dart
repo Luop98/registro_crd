@@ -5,7 +5,7 @@ import 'dart:async';
 
 class DBHelper{
 
-  Database? _db;
+   Database? _db;
 
   initBD ()async{
     String databasePath = await getDatabasesPath();
@@ -58,6 +58,18 @@ class DBHelper{
 
   return Dish.fromMap(read[0]);
 
+ }
+
+ // read all
+
+ Future<List<Dish>> readAllDishes() async{
+  var dbReady = await db;
+  List<Map> list  = await dbReady!.rawQuery("SELECT * FROM Dishes");
+  List<Dish> dishes = [];
+  for(int i = 0; i< list.length; i++){
+    dishes.add(Dish(list[i]["name"],list[i]["description"],list[i]["price"]));
+  }
+  return dishes;
  }
 
 }

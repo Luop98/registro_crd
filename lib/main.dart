@@ -3,7 +3,6 @@ import 'package:registro_crd/model/dish.dart';
 import 'package:registro_crd/database/dbHelper.dart';
 import 'dart:async';
 
-
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -19,9 +18,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String? name, description;
-  double? price;
-
+  late String name, description;
+  late double price;
 
   getName(name) {
     this.name = name;
@@ -39,29 +37,44 @@ class _MyAppState extends State<MyApp> {
   }
 
   createData() {
+    setState(() {
       var dbHelper = DBHelper();
-      var dish = Dish(name, description, price);
-      dbHelper.createDish(dish);
-  
-  }
-
-  readData() {
-   var dbHelper = DBHelper();
-   Future <Dish> dish = dbHelper.readDish(name!);
-   dish.then((dishData){
-    print("${dishData.name}, ${dishData.description},${dishData.price}, ");
-   });
+    var dish = Dish(name, description, price);
+    dbHelper.createDish(dish);
+    });
+    
   }
 
   updateData() {
+    setState(() {
+      var dbHelper = DBHelper();
+    var dish = Dish(name, description, price);
+    dbHelper.updateDish(dish);
+    });
+    
+  }
+
+  readData() {
     var dbHelper = DBHelper();
-      var dish = Dish(name, description, price);
-      dbHelper.updateDish(dish);
+    Future<Dish> dish = dbHelper.readDish(name);
+    dish.then((dishData) {
+      print("${dishData.name}, ${dishData.description},${dishData.price}, ");
+    });
+  }
+
+  //video20
+  Future<List<Dish>> getAllDishes() async {
+    var dbHelper = DBHelper();
+    Future<List<Dish>> dishes = dbHelper.readAllDishes();
+    return dishes;
   }
 
   deleteData() {
-   var dbHelper = DBHelper();
-   dbHelper.deleteDish(name!);
+    setState(() {
+      var dbHelper = DBHelper();
+    dbHelper.deleteDish(name);
+    });
+    
   }
 
   @override
@@ -89,7 +102,7 @@ class _MyAppState extends State<MyApp> {
                 getDescription(description);
               },
             ),
-              SizedBox(
+            SizedBox(
               height: 15.0,
             ),
             TextField(
@@ -98,14 +111,14 @@ class _MyAppState extends State<MyApp> {
                 getPrice(price);
               },
             ),
-              SizedBox(
+            SizedBox(
               height: 15.0,
             ),
             Padding(
               padding: EdgeInsets.all(18.0),
               child: Row(
                 textDirection: TextDirection.ltr,
-                children: [
+                children: <Widget> [
                   Padding(
                     padding: EdgeInsets.only(right: 22.0),
                     child: Container(
@@ -126,7 +139,6 @@ class _MyAppState extends State<MyApp> {
                       ),
                     ),
                   ),
-                  
                   Padding(
                     padding: EdgeInsets.only(right: 22.0),
                     child: Container(
@@ -140,7 +152,7 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: Text(
                           "Read",
-                           style: TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
@@ -186,13 +198,56 @@ class _MyAppState extends State<MyApp> {
                         ),
                       ),
                     ),
+                    
+                  ),
+                  
+                ],
+               ),
+             ),
+              Row(textDirection: TextDirection.ltr,
+                children: <Widget>[
+                  Expanded(
+                    child: Text("Name:"),
+                  ),
+                  Expanded(
+                    child: Text("Descrición:"),
+                  ),
+                   Expanded(
+                    child: Text("Precio:"),
                   ),
                 ],
-              ),
-            )
-          ],
+                ),
+               /* FutureBuilder<List<Dish>>(
+                  future: getAllDishes(),
+                  builder: (context, snapshot){
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index){
+                        
+                        return  Row(
+                          textDirection: TextDirection.ltr,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(name[index]),
+                  ),
+                  Expanded(
+                    child: Text( description[index]),
+                  ),
+                   Expanded(
+                    child: Text(price.toString()),
+                  ),
+                ],
+                );
+                      },
+                    );
+                  },
+                )*/
+           ],
         ),
       ),
     );
   }
+  
+  
 }
